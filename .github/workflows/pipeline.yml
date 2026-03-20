@@ -54,6 +54,9 @@ jobs:
         run: npm ci
   
 
+      - name: Buscando errores con ESLint
+        run: npm run lint
+
       - name: Ejecutando test del proyecto
         run: npm test --coverage --ci
       
@@ -100,6 +103,12 @@ jobs:
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
 
 
+      - name: Convertir image name a minusculas
+        run: echo "IMAGE_NAME_LOWER=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Obtener SHA corto
+        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
 # Construye la imagen pero NO la sube al registry todavía
       # La guarda en el cache local de Docker (load: true)
       # para que Trivy pueda escanearla en el siguiente step
@@ -109,7 +118,7 @@ jobs:
           context: .
           push: false
           load: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: local-build:latest 
           labels: ${{ steps.meta.outputs.labels }}
           # se acelera el buld utilizando cache
           cache-from: type=gha
@@ -119,7 +128,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           #path de la imagen a analizar
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          image-ref: local-build:latest
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -174,16 +183,19 @@ jobs:
           #usamos un token pat
           token: ${{ secrets.GITOPS_TOKEN }}
 
+
       - name: Instalacion de Kustomize
         uses: imranismail/setup-kustomize@v2
 
+      - name: Convertir image name a minúsculas
+        run: echo "IMAGE_NAME_LOWER=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       # ── Aqui editamos el kustomize del ambiente que seleccionamos, tomamos el tag generado de la imagen
       # y seteamos la imagen con kustomize y el tag correcto dentro del registry
       # hacemos un commit
       - name: Actualizar image tag en overlay dev
         run: |
           cd k8s/overlays/dev
-          kustomize edit set image prueba-tecnica-apap=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.ci.outputs.image-tag }}
+          kustomize edit set image prueba-tecnica-apap=${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:${{ needs.ci.outputs.image-tag }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .

@@ -7,7 +7,9 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "test": "jest --coverage",
-    "test:ci": "jest --coverage --ci --reporters=default --reporters=jest-junit"
+    "test:ci": "jest --coverage --ci --reporters=default --reporters=jest-junit",
+    "lint": "eslint src/ test/"
+
   },
   "keywords": ["apap", "devops", "prueba-tecnica"],
   "author": "APAP - Automatizaciones TI",
