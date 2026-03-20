@@ -57,4 +57,4 @@ jobs:
       - name: Ejecutando test del proyecto
       - run: npm test --coverage --ci
       #
-  cd:
+  # cd:
