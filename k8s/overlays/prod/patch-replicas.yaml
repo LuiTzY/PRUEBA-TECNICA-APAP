@@ -1,0 +1,7 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prueba-tecnica-apap
+spec:
+  # Prod necesita alta disponibilidad colocamos 3
+  replicas: 3

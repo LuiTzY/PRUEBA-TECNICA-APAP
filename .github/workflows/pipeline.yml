@@ -86,4 +86,91 @@ jobs:
           username: ${{ github.actor }} 
           password: ${{ secrets.GITHUB_TOKEN }}
 
-  # cd:
+
+
+      - name: Extraccion de data de la imagen de docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=sha-,format=short
+            type=ref,event=branch
+            type=ref,event=pr
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name:  Escaneo de vulnerabilidades con Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          #path de la imagen a analizar
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+          vuln-type: 'os,library'
+          output: 'trivy-report.txt'
+
+      # Obtenemos el reporte que trivy nos da
+      - name: Obtener reporte de Trivy
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: trivy-report
+          path: trivy-report.txt
+          retention-days: 7
+
+      # Subimos la imagen al registry
+      - name: Push imagen al registry
+        uses: docker/build-push-action@v5
+        if: github.event_name == 'push'
+        with:
+          context: .
+          push: true
+          #Aqui extraemos la info del step de la data de docker 
+          tags: ${{ steps.meta.outputs.tags }} 
+          labels: ${{ steps.meta.outputs.labels }}
+        
+
+      # Guardamos el sha del commit para el job de CD
+      - name: Guardar image tag como output para flujo CD
+        id: image-tag
+        run: echo "tag=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+    # Expone el output para que el job CD pueda usarlo
+    outputs:
+      image-tag: ${{ steps.image-tag.outputs.tag }}
+
+
+  cd:
+    name:  Actualizar GitOps para ArgoCD
+    runs-on: ubuntu-latest
+    needs: ci #requiere que ya el CI se haya completado
+    # Solo en push a develop (no en PRs)
+    if: github.event_name == 'push'
+
+    steps:
+
+      # Aqui accedemos al codigo del mismo repo que en este caso es el que mantiene el patron de gitops
+      - name: Checkout repo de GitOps
+        uses: actions/checkout@v4
+        with:
+          #usamos un token pat
+          token: ${{ secrets.GITOPS_TOKEN }}
+
+      - name: Instalacion de Kustomize
+        uses: imranismail/setup-kustomize@v2
+
+      # ── Aqui editamos el kustomize del ambiente que seleccionamos, tomamos el tag generado de la imagen
+      # y seteamos la imagen con kustomize y el tag correcto dentro del registry
+      # hacemos un commit
+      - name: Actualizar image tag en overlay dev
+        run: |
+          cd k8s/overlays/dev
+          kustomize edit set image prueba-tecnica-apap=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.ci.outputs.image-tag }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Actualizado tag de imagen ${{ needs.ci.outputs.image-tag }} [skip ci]"
+          git push
+      #Nota: skip ci evita que se haga un loop al hacer los commits, es decir este commit no va a lanzar el flujo de ci ya previamente hecho

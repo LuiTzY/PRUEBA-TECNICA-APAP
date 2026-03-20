@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+namespace: prod
+
+images:
+  - name: prueba-tecnica-apap
+    newName: ghcr.io/luitzy/prueba-tecnica-apap
+    newTag: latest
+
+nameSuffix: "-prod"
+
+patches:
+  - path: patch-replicas.yaml

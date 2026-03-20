@@ -1,0 +1,70 @@
+#Este es el plano de mi POD 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prueba-tecnica-apap
+  # Labels estandares par describir recurso
+  labels:
+    app.kubernetes.io/name: prueba-tecnica-apap
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/component: api
+    app.kubernetes.io/managed-by: argocd
+spec:
+  # numero de replicas, esto se sobrescribe con los overlays dependiendo del ambiente
+  replicas: 1
+
+  # Selecto para que k8 sepa a que servicio pertenecen estos pods
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prueba-tecnica-apap
+
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: prueba-tecnica-apap
+        app.kubernetes.io/version: "1.0.0"
+    spec:
+      containers:
+        - name: prueba-tecnica-apap
+          # La imagen base — Kustomize la sobreescribe por ambiente
+          image: prueba-tecnica-apap:latest
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+
+          #variables de entorno del contenedor
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3000"
+
+          # Limitacion de recursos 
+          resources:
+            requests:
+              cpu: "100m"      
+              memory: "128Mi"  
+            limits:
+              cpu: "250m"      
+              memory: "256Mi"  
+
+          # K8 verifica si la app cumple la prueba si no, lo reinicia
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15   # espera 15s antes del primer chequeo
+            periodSeconds: 20         # chequea cada 20s
+            failureThreshold: 3       # si tiene 3 fallos va a reiniciar 
+
+          # prueba que valida si la app esta lista para recibir trafico
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+
+
+      restartPolicy: Always

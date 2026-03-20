@@ -1,0 +1,7 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prueba-tecnica-apap
+spec:
+  # en qa necesitamos simular un ambiente similar  a prod
+  replicas: 2

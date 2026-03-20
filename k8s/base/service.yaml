@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prueba-tecnica-apap
+  labels:
+    app.kubernetes.io/name: prueba-tecnica-apap
+    app.kubernetes.io/component: api
+    app.kubernetes.io/managed-by: argocd
+spec:
+  # ClusterIP = solo accesible dentro del clúster
+  # Para exponer externamente usaríamos LoadBalancer o Ingress (bonus)
+  type: ClusterIP
+
+  # El Service redirige tráfico a los pods que tengan este label
+  selector:
+    app.kubernetes.io/name: prueba-tecnica-apap
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80           # puerto del Service (por donde entra el tráfico)
+      targetPort: 3000   # puerto del contenedor (donde escucha la app)
