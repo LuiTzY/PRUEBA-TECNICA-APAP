@@ -21,7 +21,7 @@ jobs:
     name: Build, Test, Scan y Push de imagen 
 
     #runner a utilzar
-    runs-on: ubuntu-last 
+    runs-on: ubuntu-latest
 
     #Permisos necesarios para las acciones que va a ejecutar este job
     permissions:
@@ -85,5 +85,5 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }} 
           password: ${{ secrets.GITHUB_TOKEN }}
-          
+
   # cd:
