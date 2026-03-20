@@ -5,8 +5,8 @@ name: CI/CD Prueba tecnica de APAP
 on:
   push: 
     branches: [develop]
-
-  pull_request: [main,master]
+  pull_request: 
+    branches: [main,master]
 
 #declaramos variables globales
 env:
