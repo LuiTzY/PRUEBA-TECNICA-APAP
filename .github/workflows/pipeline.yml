@@ -99,6 +99,22 @@ jobs:
             type=ref,event=pr
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
 
+
+# Construye la imagen pero NO la sube al registry todavía
+      # La guarda en el cache local de Docker (load: true)
+      # para que Trivy pueda escanearla en el siguiente step
+      - name: Build de imagen Docker para trivy
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          load: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # se acelera el buld utilizando cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
       - name:  Escaneo de vulnerabilidades con Trivy
         uses: aquasecurity/trivy-action@master
         with:
