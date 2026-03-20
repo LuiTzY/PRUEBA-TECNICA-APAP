@@ -51,7 +51,7 @@ jobs:
 
       #
       - name: Instalacion de deps del proyecto
-      - run: npm ci
+        run: npm ci
   
 
       - name: Ejecutando test del proyecto
