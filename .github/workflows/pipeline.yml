@@ -47,7 +47,7 @@ jobs:
 
         with:
           #aqui utilizamos basicamente la misma version de la imagen de node de docker
-          - node-version: '25.8.1'
+          node-version: '25.8.1'
 
       #
       - name: Instalacion de deps del proyecto
