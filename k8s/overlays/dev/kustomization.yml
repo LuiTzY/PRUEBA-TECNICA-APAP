@@ -13,7 +13,7 @@ namespace: dev
 images:
 - name: prueba-tecnica-apap
   newName: ghcr.io/luitzy/prueba-tecnica-apap
-  newTag: sha-3fae811
+  newTag: sha-d4b91a0
 
 # ponemos el sufijo de dev para poder identificar los recursos asociados 
 nameSuffix: -dev
