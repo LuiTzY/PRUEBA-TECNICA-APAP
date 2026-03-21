@@ -162,10 +162,23 @@ jobs:
         id: image-tag
         run: echo "tag=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
+      - name: Notificar por teams Chanel APAP Prueba tecnica
+        uses: jdcargile/ms-teams-notification@v1.4
+
+        with:
+              github-token: ${{ github.token }} 
+              ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+              notification-summary: Despliegue CI completado
+              notification-color: 17a2b8
+              timezone: America/Santo_Domingo
+              verbose-logging: true
     # Expone el output para que el job CD pueda usarlo
     outputs:
       image-tag: ${{ steps.image-tag.outputs.tag }}
 
+
+
+      
 
   cd:
     name:  Actualizar GitOps para ArgoCD
