@@ -3,7 +3,7 @@ kind: Kustomization
 
 # Le decimos que tome todo de la base
 resources:
-  - ../../base
+- ../../base
 
 # Namespace donde se despliega en dev
 namespace: dev
@@ -11,13 +11,13 @@ namespace: dev
 # La imagen que usa este ambiente
 # el action de git siempre actualiza el registry con la ultima imagen, por eso usamos el latest
 images:
-  - name: prueba-tecnica-apap
-    newName: ghcr.io/luity/prueba-tecnica
-    newTag: latest
+- name: prueba-tecnica-apap
+  newName: ghcr.io/luitzy/prueba-tecnica-apap
+  newTag: sha-9902301
 
 # ponemos el sufijo de dev para poder identificar los recursos asociados 
-nameSuffix: "-dev"
+nameSuffix: -dev
 
 # Parches específicos de dev
 patches:
-  - path: patch-replicas.yaml
+- path: patch-replicas.yaml
