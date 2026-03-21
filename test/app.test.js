@@ -25,13 +25,13 @@ describe('GET /', () => {
 describe('GET /health',()=>{
 
   test('Validar que health retorne 200 ', async ()=>{
-    const res = await request(app).get('/health')
-    expect(res.statusCode).toBe(200)
+    const res = await request(app).get('/health');
+    expect(res.statusCode).toBe(200);
   })
 
   test('Validar que health retorne propiedad status igual a healthy ', async ()=>{
-    const res = await request(app).get('/health')
-    expect(res.body.status).toBe('healthy')
+    const res = await request(app).get('/health');
+    expect(res.body.status).toBe('healthy');
   })
 
   test('retorna los campos timestamp y uptime', async () => {
