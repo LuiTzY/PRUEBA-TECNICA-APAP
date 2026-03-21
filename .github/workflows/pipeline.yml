@@ -42,6 +42,13 @@ jobs:
 
           fetch-depth: 0 #esto le indica a sonar que lea todo el historial de commits
 
+
+      #Validacion despues del checkout
+      - name: Escaneando leaks de Secrets del repo
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Instalacion de node (Seteando ambiente)
         uses: actions/setup-node@v6
 
