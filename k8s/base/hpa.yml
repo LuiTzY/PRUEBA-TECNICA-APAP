@@ -1,0 +1,28 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: prueba-tecnica-apap
+  labels:
+    app.kubernetes.io/name: prueba-tecnica-apap
+    app.kubernetes.io/component: api
+spec:
+  # Le decimos a que Deployment va aplicar el HPA
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: prueba-tecnica-apap
+
+  # Rango de las replicas
+  # nunca bajara de 1 replica ni hara mas de 5
+  minReplicas: 1
+  maxReplicas: 5
+
+  metrics:
+    # Escala basado en uso de CPU
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          # Si el uso promedio de CPU supera 70% se agregaran mas pods
+          averageUtilization: 70
