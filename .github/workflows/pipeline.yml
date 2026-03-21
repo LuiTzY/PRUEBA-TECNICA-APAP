@@ -55,7 +55,7 @@ jobs:
   
 
       - name: Buscando errores con ESLint
-        run: npm run lint
+        run: npm run lint --fix
 
       - name: Ejecutando test del proyecto
         run: npm test --coverage --ci
