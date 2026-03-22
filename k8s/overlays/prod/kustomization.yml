@@ -9,7 +9,7 @@ namespace: prod
 images:
 - name: prueba-tecnica-apap
   newName: ghcr.io/luitzy/prueba-tecnica-apap
-  newTag: sha-3ccdfaa
+  newTag: sha-72885a5
 
 nameSuffix: -prod
 
