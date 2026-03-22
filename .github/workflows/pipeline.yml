@@ -82,7 +82,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         #Como req pide token de sonar y token de git que se setea automatico
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKENa }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 
