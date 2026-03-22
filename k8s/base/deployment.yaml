@@ -13,11 +13,12 @@ spec:
   # numero de replicas, esto se sobrescribe con los overlays dependiendo del ambiente
   replicas: 1
 
-  # Selecto para que k8 sepa a que servicio pertenecen estos pods
+  # Selecto para que k8 busque los pods que tengan este selector
   selector:
     matchLabels:
       app.kubernetes.io/name: prueba-tecnica-apap
 
+  #labels que tendran estos pods
   template:
     metadata:
       labels:

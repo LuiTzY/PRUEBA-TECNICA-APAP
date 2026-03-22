@@ -22,6 +22,9 @@ spec:
     # desde cualquier pod dentro del mismo namespace
     - from:
         - podSelector: {}   # cualquier pod del mismo namespace
+      ports:
+        - protocol: TCP
+          port: 3000
 
     - from:
         - namespaceSelector:
@@ -34,6 +37,13 @@ spec:
   # trafico saliente permitido
   egress:
     # Permite salida al API server de Kubernetes
+
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+          
     - ports:
         - protocol: TCP
           port: 443

@@ -226,7 +226,7 @@ jobs:
       # hacemos un commit
       - name: Actualizar image tag en overlay dev
         run: |
-          cd k8s/overlays/dev
+          cd k8s/overlays/prod
           kustomize edit set image prueba-tecnica-apap=${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:${{ needs.ci.outputs.image-tag }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
