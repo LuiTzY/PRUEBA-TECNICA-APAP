@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prueba-tecnica-apap-dev
+  namespace: argocd
+spec:
+  project: default
+
+  # ── De dónde obtiene los manifiestos ──────────────────────
+  source:
+    repoURL: https://github.com/LuiTzY/PRUEBA-TECNICA-APAP/
+    targetRevision: develop
+    path: k8s/overlays/dev      # carpeta que ArgoCD va a vigilar
+
+  # cluster donde va a desplegar
+  destination:
+    server: https://kubernetes.default.svc   # el cluster local
+    namespace: dev                            # namespace donde despliega
+
+  #  politica de sincronización 
+  syncPolicy:
+    automated:
+      prune: true       # elimina recursos que ya no esten git
+      selfHeal: true    # revierte cambios manuales en Kubernetes
+    syncOptions:
+      - CreateNamespace=true
+
+    #Rollback, si el despliegue falla
+    retry:
+      limit: 3          # intenta 3 veces antes de rendirse
+      backoff:
+        duration: 10s   # espera 10s entre intentos
+        factor: 2       # duplica el tiempo (10s, 20s, 40s)
+        maxDuration: 1m # 1 minuto de espera

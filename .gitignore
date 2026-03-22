@@ -5,3 +5,6 @@ coverage/
 dist/
 .nyc_output/
 junit.xml
+
+
+k8s*.yaml
