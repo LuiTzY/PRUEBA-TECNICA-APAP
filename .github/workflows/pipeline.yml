@@ -78,8 +78,8 @@ jobs:
           retention-days: 7
 
       
-      - aname: Analisis con SonarCube( SonarCloud )
-        useas: SonarSource/sonarcloud-github-action@master
+      - name: Analisis con SonarCube( SonarCloud )
+        uses: SonarSource/sonarcloud-github-action@master
         #Como req pide token de sonar y token de git que se setea automatico
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -92,7 +92,7 @@ jobs:
       - name: Login a Github Registry de imagenes
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ${{ env.REGISTRYAY }}
           username: ${{ github.actor }} 
           password: ${{ secrets.GITHUB_TOKEN }}
 
