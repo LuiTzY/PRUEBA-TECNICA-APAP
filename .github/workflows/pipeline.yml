@@ -234,3 +234,4 @@ jobs:
           git commit -m "Actualizado tag de imagen ${{ needs.ci.outputs.image-tag }} [skip ci]"
           git push
       #Nota:a skip ci evita que se haga un loop al hacer los commits, es decir este commit no va a lanzar el flujo de ci ya previamente hecho
+      #
