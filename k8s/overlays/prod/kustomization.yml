@@ -3,13 +3,13 @@ kind: Kustomization
 
 resources:
 - ../../base
-- networkpolicy.yaml 
+- networkpolicy.yaml
 namespace: prod
 
 images:
 - name: prueba-tecnica-apap
   newName: ghcr.io/luitzy/prueba-tecnica-apap
-  newTag: sha-9051034
+  newTag: sha-11bb420
 
 nameSuffix: -prod
 
