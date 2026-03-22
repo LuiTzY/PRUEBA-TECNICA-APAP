@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: prueba-tecnica-apap-netpol
-  namespace: prod
+  namespace: qa
   labels:
     app.kubernetes.io/name: prueba-tecnica-apap
     app.kubernetes.io/component: api
@@ -31,6 +31,9 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: ingress-nginx
+          podSelector:              
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
       ports:
         - protocol: TCP
           port: 3000
