@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: prueba-tecnica-apap
-  namespace: dev
+  namespace: prod
   annotations:
     # Le dice a cert-manager que use nuestro ClusterIssuer
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
@@ -12,6 +12,7 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
+    #cambiar a ip de dominio 
         - 138-197-231-69.nip.io
       # cert-manager crea este secret automaticamente con el certificado
       secretName: prueba-tecnica-apap-tls
@@ -23,6 +24,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: prueba-tecnica-apap-dev
+                name: prueba-tecnica-apap-prod
                 port:
                   number: 80
