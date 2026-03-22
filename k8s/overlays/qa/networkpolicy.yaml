@@ -1,0 +1,50 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: prueba-tecnica-apap-netpol
+  namespace: prod
+  labels:
+    app.kubernetes.io/name: prueba-tecnica-apap
+    app.kubernetes.io/component: api
+spec:
+  # Aplica a los pods de nuestra app
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: prueba-tecnica-apap
+
+  # Controlamos trafico entrante como saliente
+  policyTypes:
+    - Ingress
+    - Egress
+
+  # Trafico entrante, lo que vamos a permitir
+  ingress:
+    # Solo permitimos trafico en el puerto de la app 
+    # desde cualquier pod dentro del mismo namespace
+    - from:
+        - podSelector: {}   # cualquier pod del mismo namespace
+      ports:
+        - protocol: TCP
+          port: 3000
+
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 3000
+
+  # trafico saliente permitido
+  egress:
+    # Permite salida al API server de Kubernetes
+
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+          
+    - ports:
+        - protocol: TCP
+          port: 443
