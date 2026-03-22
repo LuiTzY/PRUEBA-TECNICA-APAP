@@ -5,3 +5,4 @@ metadata:
 spec:
   # en qa necesitamos simular un ambiente similar  a prod
   replicas: 2
+  #

@@ -92,7 +92,7 @@ jobs:
       - name: Login a Github Registry de imagenes
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRYAY }}
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }} 
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -224,7 +224,7 @@ jobs:
       # ── Aqui editamos el kustomize del ambiente que seleccionamos, tomamos el tag generado de la imagen
       # y seteamos la imagen con kustomize y el tag correcto dentro del registry
       # hacemos un commit
-      - name: Actualizar image tag en overlay dev
+      - name: Actualizar image tag en overlay
         run: |
           cd k8s/overlays/prod
           kustomize edit set image prueba-tecnica-apap=${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:${{ needs.ci.outputs.image-tag }}
