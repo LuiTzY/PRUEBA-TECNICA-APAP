@@ -179,6 +179,18 @@ jobs:
               notification-color: 17a2b8
               timezone: America/Santo_Domingo
               verbose-logging: true
+
+
+      - name: Notificar por teams Chanel APAP Prueba tecnica (Si falla)
+        uses: jdcargile/ms-teams-notification@v1.4
+        if: failure()
+        with:
+              github-token: ${{ github.token }} 
+              ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+              notification-summary: Despliegue CI fallo
+              notification-color: FF0000   
+              timezone: America/Santo_Domingo
+              verbose-logging: true
     # Expone el output para que el job CD pueda usarlo
     outputs:
       image-tag: ${{ steps.image-tag.outputs.tag }}
