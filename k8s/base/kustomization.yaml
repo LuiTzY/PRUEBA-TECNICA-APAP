@@ -7,7 +7,6 @@ resources:
   - deployment.yaml
   - service.yaml
   - hpa.yaml
-  - networkpolicy.yaml
 
 # Agrega estos labels a TODOS los recursos automáticamente
 commonLabels:
