@@ -78,11 +78,11 @@ jobs:
           retention-days: 7
 
       
-      - name: Analisis con SonarCube( SonarCloud )
-        uses: SonarSource/sonarcloud-github-action@master
+      - aname: Analisis con SonarCube( SonarCloud )
+        useas: SonarSource/sonarcloud-github-action@master
         #Como req pide token de sonar y token de git que se setea automatico
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKENa }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 
